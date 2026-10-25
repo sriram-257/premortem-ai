@@ -14,6 +14,15 @@ uvicorn api:app --host 0.0.0.0 --port 8000
 ```
 Model is pre-trained (`model.joblib`). To retrain: `python -c "import engine; engine.train_model()"` (~10 s).
 
+The model artifact is serialized with scikit-learn 1.8.0. Keep the pinned
+versions in `requirements.txt`; newer scikit-learn releases can fail during
+startup while loading the artifact because they move private loss modules.
+Render can continue using Python 3.14 with these dependency pins.
+
+For Render, use `pip install -r requirements.txt` as the build command and
+`uvicorn api:app --host 0.0.0.0 --port $PORT` as the start command. Render
+provides `$PORT`; do not hard-code port 8000 in the hosted service.
+
 Check it: open http://localhost:8000/docs  → try `POST /api/compare` with `{"root":"db-primary","kind":"leak","seed":7}`.
 
 ## Run the frontend
