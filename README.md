@@ -14,7 +14,9 @@ uvicorn api:app --host 0.0.0.0 --port 8000
 ```
 Model is pre-trained (`model.joblib`). To retrain: `python -c "import engine; engine.train_model()"` (~10 s).
 
-The model artifact is serialized with scikit-learn 1.8.0. Keep the pinned
+The deployed model metadata file `model_stats.json` must be included with
+`model.joblib`; `/api/model` reads it at startup/runtime. The model artifact
+is serialized with scikit-learn 1.8.0. Keep the pinned
 versions in `requirements.txt`; newer scikit-learn releases can fail during
 startup while loading the artifact because they move private loss modules.
 Render can continue using Python 3.14 with these dependency pins.
