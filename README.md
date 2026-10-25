@@ -36,16 +36,40 @@ npm install
 npm run dev
 ```
 
-The dashboard uses `http://localhost:8000` by default. Set `VITE_API_BASE` when the API is hosted elsewhere:
+The dashboard uses `http://localhost:8000` during local development. Production
+builds default to the deployed API at
+`https://premortem-ai-h6je.onrender.com`. Set `VITE_API_BASE` explicitly when
+the API is hosted elsewhere:
 
 ```bash
 VITE_API_BASE=https://your-api.example npm run dev
 ```
 
+For a production build, create a `.env.production` file (or configure the
+variable in your frontend hosting provider) with:
+
+```bash
+VITE_API_BASE=https://premortem-ai-h6je.onrender.com
+```
+
 `public/snapshot.json` is used as the offline graph and preset fallback when the API cannot be reached.
 
+### CORS configuration
+
+The API allows local Vite origins by default. When deploying the frontend,
+set `PREMORTEM_CORS_ORIGINS` on the Render backend to the exact frontend origin
+(including `https://` and excluding a trailing slash). Multiple origins may be
+comma-separated:
+
+```bash
+PREMORTEM_CORS_ORIGINS=https://your-frontend.example,https://preview.example
+```
+
+Keep `https://premortem-ai-h6je.onrender.com` as the `VITE_API_BASE` value; it
+is the API origin, not the frontend CORS origin.
+
 ## Connect Lovable
-- Backend on the same laptop you demo on: Lovable preview calls `http://localhost:8000` from your browser (CORS is open).
+- Backend on the same laptop you demo on: Lovable preview calls `http://localhost:8000` from your browser (the local Vite origins are allowed by default).
   If Chrome blocks it / asks for local-network permission, allow it, or tunnel: `npx cloudflared tunnel --url http://localhost:8000`
   (or `ngrok http 8000`) and set `VITE_API_BASE` to the https URL.
 - Put `snapshot.json` in the Lovable project's `public/` folder = automatic offline fallback.

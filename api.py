@@ -1,6 +1,7 @@
 """PreMortem API.   Run:  uvicorn api:app --host 0.0.0.0 --port 8000"""
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import numpy as np
@@ -11,7 +12,15 @@ from pydantic import BaseModel
 import engine as E
 
 app = FastAPI(title="PreMortem API", version="1.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+configured_origins = os.getenv("PREMORTEM_CORS_ORIGINS", "")
+cors_origins = [
+    origin.strip().rstrip("/")
+    for origin in configured_origins.split(",")
+    if origin.strip()
+]
+if not cors_origins:
+    cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_methods=["*"], allow_headers=["*"])
 E.get_model()  # load (or train) once at startup
 
 PRESETS = [
