@@ -16,6 +16,23 @@ Model is pre-trained (`model.joblib`). To retrain: `python -c "import engine; en
 
 Check it: open http://localhost:8000/docs  → try `POST /api/compare` with `{"root":"db-primary","kind":"leak","seed":7}`.
 
+## Run the frontend
+
+Install the frontend dependencies and start the Vite development server in a second terminal:
+
+```bash
+npm install
+npm run dev
+```
+
+The dashboard uses `http://localhost:8000` by default. Set `VITE_API_BASE` when the API is hosted elsewhere:
+
+```bash
+VITE_API_BASE=https://your-api.example npm run dev
+```
+
+`public/snapshot.json` is used as the offline graph and preset fallback when the API cannot be reached.
+
 ## Connect Lovable
 - Backend on the same laptop you demo on: Lovable preview calls `http://localhost:8000` from your browser (CORS is open).
   If Chrome blocks it / asks for local-network permission, allow it, or tunnel: `npx cloudflared tunnel --url http://localhost:8000`
